@@ -19,6 +19,11 @@ export default function RootLayout({
         <body className={inter.className}>
         {/* Simple navbar or header could go here */}
         <main className="min-h-screen bg-gray-50 p-4">
+            <nav className="mb-4">
+            <a href="/posts" className="text-blue-600 hover:underline">
+                Posts
+            </a>
+            </nav>
             {children}
         </main>
         </body>
