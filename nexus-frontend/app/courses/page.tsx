@@ -86,13 +86,13 @@ export default function CoursesPage() {
             {/* Main Content */}
             <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold text-gray-800">My Posts</h1>
+                    <h1 className="text-2xl font-bold text-gray-800">My course</h1>
                     <button
                         onClick={() => router.push("/courses/create")}
                         className="flex items-center gap-2 bg-cyan-500 text-white px-4 py-2 rounded-md hover:bg-cyan-600 transition-colors"
                     >
                         <PlusCircle size={18} />
-                        <span>Create New Post</span>
+                        <span>Create New course</span>
                     </button>
                 </div>
 
@@ -104,7 +104,7 @@ export default function CoursesPage() {
 
                 {courses.length === 0 ? (
                     <div className="bg-white rounded-lg shadow p-8 text-center">
-                        <p className="text-gray-500">No postss found. Create your first post to get started!</p>
+                        <p className="text-gray-500">No course found. Create your first course to get started!</p>
                     </div>
                 ) : (
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
