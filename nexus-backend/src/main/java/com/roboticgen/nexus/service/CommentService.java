@@ -76,6 +76,6 @@ public class CommentService {
         r.setAuthorUsername(c.getAuthor().getUsername());
         r.setCreatedAt(c.getCreatedAt());
         r.setUpdatedAt(c.getUpdatedAt());
-        return r;
-    }
+        return r;
+    }
 }
