@@ -10,5 +10,5 @@ public class CommentResponse {
     private Long authorId;
     private String authorUsername;
     private Instant createdAt;
-    private Instant updatedAt;
+    private Instant updatedAt;
 }
