@@ -7,6 +7,7 @@ interface Post {
   id: number
   title: string
   description: string
+  instructorId: number 
   instructorUsername: string
   mediaUrls: string[]
 }
