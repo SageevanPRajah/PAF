@@ -7,6 +7,7 @@ interface Post {
   id: number
   title: string
   description: string
+  instructorId: number 
   instructorUsername: string
   mediaUrls: string[]
 }
@@ -37,6 +38,6 @@ export default function PostFeed() {
       {posts.map(post => (
         <PostItem key={post.id} post={post} />
       ))}
-    </div>
-  )
+    </div>
+  )
 }
