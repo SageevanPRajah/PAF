@@ -31,5 +31,5 @@ public class Comment {
     private Instant updatedAt;
 
     @PrePersist void onCreate() { createdAt = updatedAt = Instant.now(); }
-    @PreUpdate  void onUpdate() { updatedAt = Instant.now(); }
+    @PreUpdate  void onUpdate() { updatedAt = Instant.now(); }
 }
