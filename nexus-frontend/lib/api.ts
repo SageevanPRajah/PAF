@@ -3,6 +3,10 @@
 export const API_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, '') || 'http://localhost:8080/api'
 
+// strip the "/api" so we can load static files at "/uploads/..."
+export const BACKEND_HOST =
+  (process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, '') || 'http://localhost:8080'); 
+
 interface LoginRequest {
   username: string
   password: string
@@ -16,7 +20,7 @@ interface AuthResponse {
 export async function loginRequest(
   credentials: LoginRequest
 ): Promise<AuthResponse> {
-  const res = await fetch(${API_URL}/auth/authenticate, {
+  const res = await fetch(`${API_URL}/auth/authenticate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(credentials),
@@ -79,7 +83,7 @@ export async function authFetch<T = unknown>(
   options: Omit<RequestInit, 'body'> & { body?: any } = {}
 ): Promise<T> {
   // Build full URL
-  const url = ${API_URL}${path}
+  const url = `${API_URL}${path}`
 
   // Grab the token
   const token = getAccessToken()
@@ -102,7 +106,7 @@ export async function authFetch<T = unknown>(
 
   // Attach the Authorization header if we have a token
   if (token) {
-    headers['Authorization'] = Bearer ${token}
+    headers['Authorization'] = `Bearer ${token}`
   }
 
   // Perform the fetch
@@ -115,10 +119,10 @@ export async function authFetch<T = unknown>(
   // Throw with the response text on error
   if (!res.ok) {
     const text = await res.text()
-    throw new Error(Error ${res.status}: ${text})
+    throw new Error(`Error ${res.status}: ${text}`)
   }
 
   // Parse JSON or return an empty object if no body
   const text = await res.text()
-  return text ? JSON.parse(text) : ({} as T)
+  return text ? JSON.parse(text) : ({} as T)
 }
