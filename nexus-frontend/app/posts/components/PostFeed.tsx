@@ -38,6 +38,6 @@ export default function PostFeed() {
       {posts.map(post => (
         <PostItem key={post.id} post={post} />
       ))}
-    </div>
-  )
+    </div>
+  )
 }
