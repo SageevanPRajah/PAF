@@ -13,9 +13,10 @@ public class PostLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false )
     @JoinColumn(name = "post_id")
     private Post post;
+
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
