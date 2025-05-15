@@ -114,15 +114,15 @@ export default function FeedPage() {
 
   /* -------- render -------- */
   return (
-    <div className="max-w-5xl mx-auto py-8 flex gap-8">
+    <div className="flex max-w-5xl gap-8 py-8 mx-auto">
       {/* ------- main feed (75 %) ------- */}
       <div className="flex-1 space-y-8">
         {/* follow bar */}
-        <div className="w-full overflow-hidden relative">
+        <div className="relative w-full overflow-hidden">
         {/* Left arrow */}
         <button
           onClick={scrollLeft}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow"
+          className="absolute left-0 z-10 p-2 -translate-y-1/2 bg-white rounded-full shadow top-1/2"
         >
           ‹
         </button>
@@ -138,9 +138,9 @@ export default function FeedPage() {
             .map((u) => (
             <div
               key={u.id}
-              className="w-40 flex-shrink-0 flex flex-col items-center p-4 rounded-lg border shadow bg-white"
+              className="flex flex-col items-center flex-shrink-0 w-40 p-4 bg-white border rounded-lg shadow"
             >
-              <div className="h-16 w-16 rounded-full bg-gray-300 flex items-center justify-center text-2xl font-bold">
+              <div className="flex items-center justify-center w-16 h-16 text-2xl font-bold bg-gray-300 rounded-full">
                 {u.username.charAt(0).toUpperCase()}
               </div>
 
@@ -169,7 +169,7 @@ export default function FeedPage() {
         {/* Right arrow */}
         <button
           onClick={scrollRight}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow"
+          className="absolute right-0 z-10 p-2 -translate-y-1/2 bg-white rounded-full shadow top-1/2"
         >
           ›
         </button>
@@ -177,26 +177,26 @@ export default function FeedPage() {
 
         {/* posts */}
         {visiblePosts.map((p) => (
-          <div key={p.id} className="p-6 border rounded-lg bg-white shadow-sm">
+          <div key={p.id} className="p-6 bg-white border rounded-lg shadow-sm">
             <h2 className="text-xl font-semibold">
               {p.title} — {p.instructorUsername}
             </h2>
             <p className="mt-2">{p.description}</p>
 
             {p.mediaUrls.length > 0 && (
-              <div className="mt-4 flex space-x-2 overflow-x-auto">
+              <div className="flex mt-4 space-x-2 overflow-x-auto">
                 {p.mediaUrls.map((path) => (
                   <img
                     key={path}
                     src={`${BACKEND_HOST}${path}`}
                     alt="post media"
-                    className="w-32 h-32 object-cover rounded"
+                    className="object-cover w-32 h-32 rounded"
                   />
                 ))}
               </div>
             )}
 
-            <div className="mt-4 flex items-center justify-between">
+            <div className="flex items-center justify-between mt-4">
               <button
                 onClick={() => handleLike(p.id)}
                 className="flex items-center space-x-1"
@@ -214,7 +214,7 @@ export default function FeedPage() {
       </div>
 
       {/* ------- post form sidebar (25 %) ------- */}
-      <aside className="hidden lg:block w-1/4">
+      <aside className="hidden w-1/4 lg:block">
         <PostForm
           onNewPost={(post) =>
             setPosts((prev) => [
