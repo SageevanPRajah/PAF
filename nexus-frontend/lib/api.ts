@@ -3,6 +3,10 @@
 export const API_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, '') || 'http://localhost:8080/api'
 
+// strip the "/api" so we can load static files at "/uploads/..."
+export const BACKEND_HOST =
+  (process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, '') || 'http://localhost:8080'); 
+
 interface LoginRequest {
   username: string
   password: string
@@ -29,12 +33,18 @@ export async function loginRequest(
   return res.json()
 }
 
-export async function getCurrentUser() {
-  const res = await fetch(`${API_URL}/auth/me`, { method: 'GET' })
-  if (!res.ok) {
-    throw new Error('Failed to fetch user profile')
+/**
+ * Fetch the current logged-in user.
+ * Returns the user object or null if not authenticated.
+ */
+export async function getCurrentUser(): Promise<{ id: number; username: string; avatarUrl?: string } | null> {
+  try {
+    // Uses authFetch so the Authorization header goes out with the JWT
+    return await authFetch('/auth/me', { method: 'GET' })
+  } catch (err) {
+    // on 401 or any error, treat as "not logged in"
+    return null
   }
-  return res.json()
 }
 
 export function getAccessToken(): string | null {
@@ -64,10 +74,13 @@ export function clearTokens() {
  *  • Attaches the Bearer token
  *  • Detects FormData vs JSON bodies
  *  • Throws on non-2xx and returns parsed JSON
+ *
+ * Note the use of Omit<RequestInit,'body'> & { body?: any } so
+ * you can pass { content: '…' } directly.
  */
 export async function authFetch<T = unknown>(
   path: string,
-  options: RequestInit & { body?: any } = {}
+  options: Omit<RequestInit, 'body'> & { body?: any } = {}
 ): Promise<T> {
   // Build full URL
   const url = `${API_URL}${path}`
