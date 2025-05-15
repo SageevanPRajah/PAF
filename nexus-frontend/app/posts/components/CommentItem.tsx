@@ -35,7 +35,7 @@ export default function CommentItem({
 
   const save = async () => {
     const updated = await authFetch<Comment>(
-      /posts/${postId}/comments/${comment.id},
+      `/posts/${postId}/comments/${comment.id}`,
       { method: 'PUT', body: { content: text } }
     )
     onUpdate(updated)
@@ -44,7 +44,7 @@ export default function CommentItem({
 
   const del = async () => {
     await authFetch<void>(
-      /posts/${postId}/comments/${comment.id},
+      `/posts/${postId}/comments/${comment.id}`,
       { method: 'DELETE' }
     )
     onDelete()
@@ -53,32 +53,32 @@ export default function CommentItem({
   return (
     <div className="flex items-start space-x-3">
       {/* commenter avatar */}
-      <div className="flex items-center justify-center w-8 h-8 text-white bg-gray-300 rounded-full">
+      <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-white">
         {comment.authorUsername.charAt(0).toUpperCase()}
       </div>
 
       <div className="flex-1">
-        <div className="relative px-4 py-2 bg-gray-100 rounded-2xl">
+        <div className="relative bg-gray-100 px-4 py-2 rounded-2xl">
           <strong className="block">{comment.authorUsername}</strong>
 
           {editing ? (
             <>
               <textarea
                 rows={2}
-                className="w-full p-2 mt-1 border rounded"
+                className="w-full mt-1 border rounded p-2"
                 value={text}
                 onChange={e => setText(e.target.value)}
               />
-              <div className="flex gap-2 mt-1">
+              <div className="mt-1 flex gap-2">
                 <button
                   onClick={save}
-                  className="px-3 py-1 text-white bg-blue-600 rounded"
+                  className="bg-blue-600 text-white px-3 py-1 rounded"
                 >
                   Save
                 </button>
                 <button
                   onClick={() => setEditing(false)}
-                  className="px-3 py-1 bg-gray-200 rounded"
+                  className="bg-gray-200 px-3 py-1 rounded"
                 >
                   Cancel
                 </button>
@@ -92,14 +92,14 @@ export default function CommentItem({
           {(isAuthor || isPostOwner) && !editing && (
             <button
               onClick={() => setMenuOpen(o => !o)}
-              className="absolute p-1 rounded top-1 right-1 hover:bg-gray-200"
+              className="absolute top-1 right-1 p-1 rounded hover:bg-gray-200"
             >
               <MoreHorizontal size={16} />
             </button>
           )}
 
           {menuOpen && (
-            <div className="absolute z-10 bg-white border rounded shadow top-8 right-1">
+            <div className="absolute top-8 right-1 bg-white border rounded shadow z-10">
               {isAuthor && (
                 <button
                   onClick={() => { setEditing(true); setMenuOpen(false) }}
@@ -119,10 +119,10 @@ export default function CommentItem({
             </div>
           )}
         </div>
-        <span className="block mt-1 text-xs text-gray-500">
+        <span className="text-gray-500 text-xs mt-1 block">
           {new Date(comment.createdAt).toLocaleString()}
         </span>
       </div>
-    </div>
-  )
+    </div>
+  )
 }
