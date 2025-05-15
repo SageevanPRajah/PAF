@@ -29,7 +29,7 @@ export default function RootLayout({
           
 
           {/* main content */}
-          <main className="flex-1 bg-gray-50 p-6">
+          <main className="flex-1 p-6 bg-gray-50">
             {children}
           </main>
         </div>
