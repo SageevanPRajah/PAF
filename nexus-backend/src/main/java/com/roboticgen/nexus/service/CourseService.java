@@ -21,7 +21,8 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
 
-    public CourseResponse createCourse(CourseRequest request) {
+    public CourseResponse createCourse(CourseRequest request)
+     {
         User instructor = getCurrentInstructor();
 
         Course course = Course.builder()
@@ -34,7 +35,8 @@ public class CourseService {
         return mapToResponse(savedCourse);
     }
 
-    public List<CourseResponse> getInstructorCourses() {
+    public List<CourseResponse> getInstructorCourses()
+     {
         User instructor = getCurrentInstructor();
         return courseRepository.findByInstructor(instructor)
                 .stream()
@@ -47,7 +49,8 @@ public class CourseService {
         return mapToResponse(course);
     }
 
-    public CourseResponse updateCourse(Long id, CourseRequest request) {
+    public CourseResponse updateCourse(Long id, CourseRequest request)
+     {
         Course course = findCourseByIdAndInstructor(id);
 
         course.setTitle(request.getTitle());
@@ -63,7 +66,8 @@ public class CourseService {
         courseRepository.delete(course);
     }
 
-    private Course findCourseByIdAndInstructor(Long id) {
+    private Course findCourseByIdAndInstructor(Long id)
+     {
         User instructor = getCurrentInstructor();
         return courseRepository.findById(id)
                 .filter(course -> course.getInstructor().equals(instructor))
@@ -71,7 +75,8 @@ public class CourseService {
                         "Course not found with id: " + id));
     }
 
-    private User getCurrentInstructor() {
+    private User getCurrentInstructor() 
+    {
         String username = SecurityContextHolder.getContext()
                 .getAuthentication().getName();
         return userRepository.findByUsername(username)
