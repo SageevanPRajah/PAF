@@ -134,6 +134,7 @@ export default function SignupPage() {
           <div className="pt-2">
             <button
               type="button"
+              onClick={() => window.location.href = `${API_URL}/oauth2/authorization/google`}
               className="w-full bg-white text-gray-700 py-3 rounded-md border border-gray-300 flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors"
             >
               <FaGoogle className="text-lg" />

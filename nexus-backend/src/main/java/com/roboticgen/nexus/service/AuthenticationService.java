@@ -23,13 +23,16 @@ public class AuthenticationService {
   private final AuthenticationManager authenticationManager;
 
   public AuthenticationResponse register(RegisterRequest request) {
-    var user = User.builder()
-        .username(request.getUsername())
-        .email(request.getEmail())
-        .password(passwordEncoder.encode(request.getPassword()))
-        .role(request.getRole())
-        .phoneNumber(request.getPhoneNumber())
-        .build();
+    var userBuilder = User.builder()
+       .username(request.getUsername())
+       .email(request.getEmail())
+       .password(passwordEncoder.encode(request.getPassword()))
+       .role(request.getRole());
+
+   if (request.getPhoneNumber() != null && !request.getPhoneNumber().isBlank()) {
+     userBuilder.phoneNumber(request.getPhoneNumber());
+   }
+   var user = userBuilder.build();
     
     repository.save(user);
 

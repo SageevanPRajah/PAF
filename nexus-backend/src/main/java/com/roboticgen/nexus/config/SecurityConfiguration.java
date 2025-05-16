@@ -9,8 +9,16 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.roboticgen.nexus.oauth2.CustomOAuth2UserService;
+import com.roboticgen.nexus.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.roboticgen.nexus.oauth2.OAuth2AuthenticationSuccessHandler;
+import com.roboticgen.nexus.service.UserService;
 
 import java.util.List;
 
@@ -26,6 +34,13 @@ public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
+
+    private final ClientRegistrationRepository clientRegistrationRepository;
+    private final CustomOAuth2UserService    customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oauth2SuccessHandler;
+    private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
+    private final UserService           userService;
+    private final JwtService            jwtService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -50,21 +65,28 @@ public class SecurityConfiguration {
                 })
             )
             .authorizeHttpRequests(auth -> auth
-                // Public auth endpoints
                 .requestMatchers(WHITE_LIST_URL).permitAll()
-                // Allow anyone to GET uploaded media
-                .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
-                // Admin-only endpoints
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                // Everything else requires authentication
-                .anyRequest().authenticated()
+              .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+              .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
+              .requestMatchers("/api/admin/**").hasRole("ADMIN")
+              .anyRequest().authenticated()
             )
             .sessionManagement(sess -> sess
                 .sessionCreationPolicy(STATELESS)
             )
             .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 
+            .oauth2Login(oauth2 -> oauth2
+             .authorizationEndpoint(ae -> ae
+               .authorizationRequestRepository(authorizationRequestRepository)
+             )
+             .userInfoEndpoint(ui -> ui
+               .userService(customOAuth2UserService)
+             )
+             .successHandler(oauth2SuccessHandler)
+          );
         return http.build();
     }
+
 }
