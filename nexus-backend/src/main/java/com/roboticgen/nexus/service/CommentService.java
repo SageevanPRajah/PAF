@@ -68,14 +68,5 @@ public class CommentService {
             .orElseThrow(() -> new IllegalStateException("No user"));
     }
 
-    private CommentResponse toDto(Comment c) {
-        CommentResponse r = new CommentResponse();
-        r.setId(c.getId());
-        r.setContent(c.getContent());
-        r.setAuthorId(c.getAuthor().getId());
-        r.setAuthorUsername(c.getAuthor().getUsername());
-        r.setCreatedAt(c.getCreatedAt());
-        r.setUpdatedAt(c.getUpdatedAt());
-        return r;
-    }
+   
 }
