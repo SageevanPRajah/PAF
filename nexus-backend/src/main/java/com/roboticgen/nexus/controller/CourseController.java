@@ -52,6 +52,7 @@ public class CourseController {
     public ResponseEntity<Void> deleteCourse(
             @PathVariable Long id) {
         courseService.deleteCourse(id);
+        console.log("Course with ID " + id + " deleted successfully.");
         return ResponseEntity.ok().build();
 
     }
