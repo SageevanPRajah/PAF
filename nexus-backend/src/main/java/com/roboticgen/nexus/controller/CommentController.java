@@ -28,14 +28,7 @@ public class CommentController {
         return ResponseEntity.ok(svc.list(postId));
     }
 
-    @PutMapping("/{commentId}")
-    public ResponseEntity<CommentResponse> update(
-        @PathVariable Long postId,
-        @PathVariable Long commentId,
-        @RequestBody CommentRequest req
-    ) {
-        return ResponseEntity.ok(svc.update(postId, commentId, req));
-    }
+    
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> delete(
