@@ -47,12 +47,5 @@ public class CourseController {
         return ResponseEntity.ok(courseService.updateCourse(id, request));
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<Void> deleteCourse(
-            @PathVariable Long id) {
-        courseService.deleteCourse(id);
-        return ResponseEntity.ok().build();
-
-    }
+    
 }
