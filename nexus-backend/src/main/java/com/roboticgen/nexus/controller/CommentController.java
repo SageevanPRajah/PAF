@@ -44,5 +44,6 @@ public class CommentController {
     ) {
         svc.delete(postId, commentId);
         return ResponseEntity.ok().build();
+        
     }
 }
