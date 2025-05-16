@@ -57,7 +57,8 @@ public class CourseService {
         return mapToResponse(updatedCourse);
     }
 
-    public void deleteCourse(Long id) {
+    public void deleteCourse(Long id) 
+    {
         Course course = findCourseByIdAndInstructor(id);
         courseRepository.delete(course);
     }
@@ -79,7 +80,8 @@ public class CourseService {
                         "Current user is not an instructor"));
     }
 
-    private CourseResponse mapToResponse(Course course) {
+    private CourseResponse mapToResponse(Course course) 
+    {
         CourseResponse response = new CourseResponse();
         response.setId(course.getId());
         response.setTitle(course.getTitle());
