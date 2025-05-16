@@ -21,11 +21,11 @@ export default function CommentSection({
 }) {
   const [comments, setComments] = useState<Comment[]>([])
   const [newContent, setNewContent] = useState('')
-  const [me, setMe] = useState<{ id: number; username: string; avatarUrl?: string } | null>(null)
+  const [me, setMe] = useState<{ id: number; username: string } | null>(null)
 
   // load comments + current user
   useEffect(() => {
-    authFetch<Comment[]>(/posts/${postId}/comments, { method: 'GET' })
+    authFetch<Comment[]>(`/posts/${postId}/comments`, { method: 'GET' })
       .then(setComments)
       .catch(console.error)
 
@@ -37,7 +37,7 @@ export default function CommentSection({
   const submitComment = async () => {
     if (!newContent.trim()) return
     const c = await authFetch<Comment>(
-      /posts/${postId}/comments,
+      `/posts/${postId}/comments`,
       { method: 'POST', body: { content: newContent.trim() } }
     )
     setComments(prev => [...prev, c])
@@ -74,12 +74,11 @@ export default function CommentSection({
 
       {/* input bar like FB */}
       {me && (
-        <div className="flex items-center pt-2 space-x-3 border-t">
-          <img
-            src={me.avatarUrl ?? '/images/default-avatar.png'}
-            alt={me.username}
-            className="w-8 h-8 rounded-full"
-          />
+        <div className="flex items-center space-x-3 pt-2 border-t">
+          {/* use first letter of username as avatar */}
+          <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-white">
+            {me.username.charAt(0).toUpperCase()}
+          </div>
           <div className="relative flex-1">
             <input
               type="text"
@@ -87,18 +86,18 @@ export default function CommentSection({
               onChange={e => setNewContent(e.target.value)}
               onKeyDown={onKeyDown}
               placeholder="Write a comment..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
             <button
               onClick={submitComment}
               disabled={!newContent.trim()}
-              className="absolute text-blue-600 -translate-y-1/2 right-3 top-1/2 hover:text-blue-800 disabled:text-gray-400"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-600 hover:text-blue-800 disabled:text-gray-400"
             >
               <Send size={18} />
             </button>
           </div>
         </div>
       )}
-    </div>
-  )
+    </div>
+  )
 }
