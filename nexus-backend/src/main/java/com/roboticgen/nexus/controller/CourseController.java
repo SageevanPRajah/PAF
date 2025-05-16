@@ -20,13 +20,15 @@ public class CourseController {
     @PostMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<CourseResponse> createCourse(
-            @RequestBody CourseRequest request) {
+            @RequestBody CourseRequest request)
+             {
         return ResponseEntity.ok(courseService.createCourse(request));
     }
 
     @GetMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<List<CourseResponse>> getInstructorCourses() {
+    public ResponseEntity<List<CourseResponse>> getInstructorCourses() 
+    {
         return ResponseEntity.ok(courseService.getInstructorCourses());
     }
 
@@ -51,5 +53,6 @@ public class CourseController {
             @PathVariable Long id) {
         courseService.deleteCourse(id);
         return ResponseEntity.ok().build();
+
     }
 }
