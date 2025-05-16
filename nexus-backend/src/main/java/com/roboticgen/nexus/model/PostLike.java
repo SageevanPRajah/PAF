@@ -17,7 +17,6 @@ public class PostLike {
     @JoinColumn(name = "post_id")
     private Post post;
 
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
     private User user;
