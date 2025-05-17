@@ -1,7 +1,12 @@
 package com.roboticgen.nexus.model;
 
 import lombok.*;
+
+import java.util.ArrayList;
+
 import jakarta.persistence.*;
+import java.util.List;
+import java.util.ArrayList;
 
 @Data
 @Builder
@@ -25,4 +30,12 @@ public class Course {
     @ManyToOne
     @JoinColumn(name = "instructor_id", nullable = false)
     private User instructor;
+
+    @OneToMany(
+    mappedBy = "course",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true
+    )
+    @Builder.Default
+    private List<Module> modules = new ArrayList<>();
 }

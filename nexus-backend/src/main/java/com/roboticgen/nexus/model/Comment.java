@@ -10,7 +10,6 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
