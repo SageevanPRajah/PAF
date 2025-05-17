@@ -67,7 +67,8 @@ public class CommentService {
         return userRepo.findByUsername(u).stream().findFirst()
             .orElseThrow(() -> new IllegalStateException("No user"));
     }
-   private CommentResponse toDto(Comment c) {
+
+    private CommentResponse toDto(Comment c) {
         CommentResponse r = new CommentResponse();
         r.setId(c.getId());
         r.setContent(c.getContent());
@@ -77,5 +78,4 @@ public class CommentService {
         r.setUpdatedAt(c.getUpdatedAt());
         return r;
     }
-   
 }
