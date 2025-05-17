@@ -13,31 +13,27 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/courses")
 @RequiredArgsConstructor
-public class CourseController 
-{
+public class CourseController {
 
     private final CourseService courseService;
 
     @PostMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<CourseResponse> createCourse(
-            @RequestBody CourseRequest request)
-             {
+            @RequestBody CourseRequest request) {
         return ResponseEntity.ok(courseService.createCourse(request));
     }
 
     @GetMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<List<CourseResponse>> getInstructorCourses() 
-    {
+    public ResponseEntity<List<CourseResponse>> getInstructorCourses() {
         return ResponseEntity.ok(courseService.getInstructorCourses());
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<CourseResponse> getCourse(
-            @PathVariable Long id) 
-            {
+            @PathVariable Long id) {
         return ResponseEntity.ok(courseService.getCourse(id));
     }
 
@@ -45,8 +41,7 @@ public class CourseController
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<CourseResponse> updateCourse(
             @PathVariable Long id,
-            @RequestBody CourseRequest request)
-             {
+            @RequestBody CourseRequest request) {
         return ResponseEntity.ok(courseService.updateCourse(id, request));
     }
 
@@ -56,6 +51,5 @@ public class CourseController
             @PathVariable Long id) {
         courseService.deleteCourse(id);
         return ResponseEntity.ok().build();
-
     }
 }
