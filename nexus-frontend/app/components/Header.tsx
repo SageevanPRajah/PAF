@@ -16,7 +16,7 @@ export default function Header() {
 
   return (
     <header className="bg-white shadow">
-      <div className="flex items-center justify-between px-6 py-4 mx-auto max-w-1xl">
+      <div className="max-w-1xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* logo + nav (left) */}
         <div className="flex items-center gap-8">
           <Image
@@ -26,7 +26,7 @@ export default function Header() {
             height={40}
           />
 
-<nav className="flex items-center gap-10 ml-20 text-gray-600 whitespace-nowrap">
+<nav className="flex ml-20 items-center gap-10 text-gray-600 whitespace-nowrap">
   <Link
     href="/feed"
     className="flex items-center gap-2 hover:text-gray-900"
@@ -64,7 +64,7 @@ export default function Header() {
         {/* logout (right) */}
         <button
           onClick={handleLogout}
-          className="flex items-center gap-1 px-3 py-1 text-gray-600 transition border border-gray-200 rounded-md ml-150 hover:text-gray-900 hover:bg-gray-100"
+          className="flex items-center ml-150 gap-1 text-gray-600 hover:text-gray-900 px-3 py-1 rounded-md border border-gray-200 hover:bg-gray-100 transition"
         >
           <LogOut size={18} />
           <span>Logout</span>
