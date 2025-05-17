@@ -2,6 +2,7 @@ package com.roboticgen.nexus.service;
 
 import com.roboticgen.nexus.dto.CourseRequest;
 import com.roboticgen.nexus.dto.CourseResponse;
+import com.roboticgen.nexus.dto.ModuleResponse;
 import com.roboticgen.nexus.exception.CourseNotFoundException;
 import com.roboticgen.nexus.model.Course;
 import com.roboticgen.nexus.model.User;
@@ -10,6 +11,8 @@ import com.roboticgen.nexus.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import com.roboticgen.nexus.dto.ModuleRequest;
+import com.roboticgen.nexus.model.Module;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,8 +24,7 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
 
-    public CourseResponse createCourse(CourseRequest request)
-     {
+    public CourseResponse createCourse(CourseRequest request) {
         User instructor = getCurrentInstructor();
 
         Course course = Course.builder()
@@ -31,12 +33,22 @@ public class CourseService {
                 .instructor(instructor)
                 .build();
 
+         if (request.getModules() != null) {
+            List<Module> mods = request.getModules().stream()
+                .map(mr -> Module.builder()
+                        .title(mr.getTitle())
+                        .content(mr.getContent())
+                        .course(course)
+                        .build())
+                .collect(Collectors.toList());
+            course.setModules(mods);
+        }
+
         Course savedCourse = courseRepository.save(course);
         return mapToResponse(savedCourse);
     }
 
-    public List<CourseResponse> getInstructorCourses()
-     {
+    public List<CourseResponse> getInstructorCourses() {
         User instructor = getCurrentInstructor();
         return courseRepository.findByInstructor(instructor)
                 .stream()
@@ -49,25 +61,34 @@ public class CourseService {
         return mapToResponse(course);
     }
 
-    public CourseResponse updateCourse(Long id, CourseRequest request)
-     {
+    public CourseResponse updateCourse(Long id, CourseRequest request) {
         Course course = findCourseByIdAndInstructor(id);
 
         course.setTitle(request.getTitle());
         course.setDescription(request.getDescription());
 
+        course.getModules().clear();
+        if (request.getModules() != null) {
+            List<Module> mods = request.getModules().stream()
+                .map(mr -> Module.builder()
+                        .title(mr.getTitle())
+                        .content(mr.getContent())
+                        .course(course)
+                        .build())
+                .collect(Collectors.toList());
+            course.getModules().addAll(mods);
+        }
+
         Course updatedCourse = courseRepository.save(course);
         return mapToResponse(updatedCourse);
     }
 
-    public void deleteCourse(Long id) 
-    {
+    public void deleteCourse(Long id) {
         Course course = findCourseByIdAndInstructor(id);
         courseRepository.delete(course);
     }
 
-    private Course findCourseByIdAndInstructor(Long id)
-     {
+    private Course findCourseByIdAndInstructor(Long id) {
         User instructor = getCurrentInstructor();
         return courseRepository.findById(id)
                 .filter(course -> course.getInstructor().equals(instructor))
@@ -75,8 +96,7 @@ public class CourseService {
                         "Course not found with id: " + id));
     }
 
-    private User getCurrentInstructor() 
-    {
+    private User getCurrentInstructor() {
         String username = SecurityContextHolder.getContext()
                 .getAuthentication().getName();
         return userRepository.findByUsername(username)
@@ -85,14 +105,25 @@ public class CourseService {
                         "Current user is not an instructor"));
     }
 
-    private CourseResponse mapToResponse(Course course) 
-    {
-        CourseResponse response = new CourseResponse();
-        response.setId(course.getId());
-        response.setTitle(course.getTitle());
-        response.setDescription(course.getDescription());
-        response.setInstructorId(course.getInstructor().getId());
-        response.setInstructorUsername(course.getInstructor().getUsername());
-        return response;
-    }
+    private CourseResponse mapToResponse(Course course) {
+    CourseResponse response = new CourseResponse();
+    response.setId(course.getId());
+    response.setTitle(course.getTitle());
+    response.setDescription(course.getDescription());
+    response.setInstructorId(course.getInstructor().getId());
+    response.setInstructorUsername(course.getInstructor().getUsername());
+
+    List<ModuleResponse> mods = course.getModules().stream()
+        .map(m -> {
+            ModuleResponse mr = new ModuleResponse();
+            mr.setId(m.getId());
+            mr.setTitle(m.getTitle());
+            mr.setContent(m.getContent());
+            return mr;
+        })
+        .collect(Collectors.toList());
+    response.setModules(mods);
+
+    return response;
+}
 }
