@@ -27,7 +27,7 @@ export default function Header() {
     <header className="relative w-full h-48 mb-8">
       {/* banner background */}
       <Image
-        src="/banner.png"
+        src="/banner2.png"
         alt="Banner"
         fill
         className="object-cover"
@@ -39,7 +39,7 @@ export default function Header() {
 
       {/* avatar + username */}
       <div className="absolute bottom-4 left-4 flex items-center space-x-4">
-        <div className="h-26 w-26 rounded-full bg-gray-300 flex items-center justify-center text-2xl font-bold text-white">
+        <div className="h-26 w-26 rounded-full bg-blue-400 flex items-center justify-center text-3xl font-bold text-white">
           {me.username.charAt(0).toUpperCase()}
         </div>
         <h1 className="text-white text-2xl font-semibold">
