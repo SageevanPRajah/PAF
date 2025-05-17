@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { authFetch, clearTokens } from '@/lib/api'
 import { PlusCircle, LogOut, Edit, Trash2, List, X } from 'lucide-react'
-import UserProfile from './components/user-profile'
+import AllCourses, { Module as AllCourseModule } from './AllCourses'
 
 export interface Module {
   id: number
@@ -18,7 +18,7 @@ interface Course {
   description: string
   instructorId: number
   instructorUsername: string
-  modules: Module[]
+  modules: AllCourseModule[]
 }
 
 export default function CoursesPage() {
@@ -40,6 +40,12 @@ export default function CoursesPage() {
   }
 
   useEffect(() => {
+    authFetch('/auth/me', { method: 'GET' })
+      .then(u => setUsername(u.username))
+      .catch(() => {/*…*/})
+  }, [])
+
+  useEffect(() => {
     fetchCourses()
   }, [])
 
@@ -59,11 +65,6 @@ export default function CoursesPage() {
     } finally {
       closeDeleteDialog()
     }
-  }
-
-  const handleLogout = () => {
-    clearTokens()
-    router.push('/login')
   }
 
   return (
@@ -92,7 +93,7 @@ export default function CoursesPage() {
             <p className="text-gray-500">No courses found. Create your first course to get started!</p>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-4 gap-6">
             {courses.map(course => (
               <div
                 key={course.id}
@@ -131,6 +132,10 @@ export default function CoursesPage() {
                 </div>
               </div>
             ))}
+            {/* Right column: all users’ courses */}
+            <div className="col-span-1">
+            <AllCourses onViewModules={openModal} currentUsername={username}  />
+            </div>
           </div>
         )}
 
@@ -156,6 +161,7 @@ export default function CoursesPage() {
             </div>
           </div>
         )}
+        
 
         {/* Delete Confirmation Modal */}
         {deletingCourseId !== null && (
