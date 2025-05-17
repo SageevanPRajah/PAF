@@ -52,4 +52,10 @@ public class CourseController {
         courseService.deleteCourse(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<List<CourseResponse>> getAllCourses() {
+        return ResponseEntity.ok(courseService.getAllCourses());
+    }
 }
