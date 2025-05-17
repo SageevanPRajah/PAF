@@ -105,6 +105,13 @@ public class CourseService {
                         "Current user is not an instructor"));
     }
 
+    public List<CourseResponse> getAllCourses() {
+    return courseRepository.findAll()
+           .stream()
+           .map(this::mapToResponse)
+           .collect(Collectors.toList());
+    }
+
     private CourseResponse mapToResponse(Course course) {
     CourseResponse response = new CourseResponse();
     response.setId(course.getId());
@@ -125,5 +132,5 @@ public class CourseService {
     response.setModules(mods);
 
     return response;
-}
+    }
 }
