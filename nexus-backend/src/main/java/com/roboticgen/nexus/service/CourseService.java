@@ -2,6 +2,7 @@ package com.roboticgen.nexus.service;
 
 import com.roboticgen.nexus.dto.CourseRequest;
 import com.roboticgen.nexus.dto.CourseResponse;
+import com.roboticgen.nexus.dto.ModuleResponse;
 import com.roboticgen.nexus.exception.CourseNotFoundException;
 import com.roboticgen.nexus.model.Course;
 import com.roboticgen.nexus.model.User;
@@ -10,6 +11,8 @@ import com.roboticgen.nexus.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import com.roboticgen.nexus.dto.ModuleRequest;
+import com.roboticgen.nexus.model.Module;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +32,17 @@ public class CourseService {
                 .description(request.getDescription())
                 .instructor(instructor)
                 .build();
+
+         if (request.getModules() != null) {
+            List<Module> mods = request.getModules().stream()
+                .map(mr -> Module.builder()
+                        .title(mr.getTitle())
+                        .content(mr.getContent())
+                        .course(course)
+                        .build())
+                .collect(Collectors.toList());
+            course.setModules(mods);
+        }
 
         Course savedCourse = courseRepository.save(course);
         return mapToResponse(savedCourse);
@@ -52,6 +66,18 @@ public class CourseService {
 
         course.setTitle(request.getTitle());
         course.setDescription(request.getDescription());
+
+        course.getModules().clear();
+        if (request.getModules() != null) {
+            List<Module> mods = request.getModules().stream()
+                .map(mr -> Module.builder()
+                        .title(mr.getTitle())
+                        .content(mr.getContent())
+                        .course(course)
+                        .build())
+                .collect(Collectors.toList());
+            course.getModules().addAll(mods);
+        }
 
         Course updatedCourse = courseRepository.save(course);
         return mapToResponse(updatedCourse);
@@ -80,12 +106,24 @@ public class CourseService {
     }
 
     private CourseResponse mapToResponse(Course course) {
-        CourseResponse response = new CourseResponse();
-        response.setId(course.getId());
-        response.setTitle(course.getTitle());
-        response.setDescription(course.getDescription());
-        response.setInstructorId(course.getInstructor().getId());
-        response.setInstructorUsername(course.getInstructor().getUsername());
-        return response;
-    }
+    CourseResponse response = new CourseResponse();
+    response.setId(course.getId());
+    response.setTitle(course.getTitle());
+    response.setDescription(course.getDescription());
+    response.setInstructorId(course.getInstructor().getId());
+    response.setInstructorUsername(course.getInstructor().getUsername());
+
+    List<ModuleResponse> mods = course.getModules().stream()
+        .map(m -> {
+            ModuleResponse mr = new ModuleResponse();
+            mr.setId(m.getId());
+            mr.setTitle(m.getTitle());
+            mr.setContent(m.getContent());
+            return mr;
+        })
+        .collect(Collectors.toList());
+    response.setModules(mods);
+
+    return response;
+}
 }
